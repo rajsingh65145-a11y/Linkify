@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+
+    <% if (locals.id) { %>
+        <p>URL generated : <a href="http://localhost:8001/<%= id %>" target="_blank">http://localhost:8001/<%= id %></a></p>
+    <% } %>
+
+    <div>
+        <form method="post" action="/url">
+            <label for="url">Enter Your Original URL:</label>
+            <input type="text" id="url" name="url" placeholder="https://example.com" required>
+            <button type="submit">Generate</button>
+        </form>
+
+        <div>
+            <% if (locals.urls) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>ShortId</th>
+                            <th>Redirect</th>
+                            <th>Clicks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% urls.forEach((url, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><a href="/<%= url.shortId %>" target="_blank"><%= url.shortId %></a></td>
+                                <td><%= url.redirectURL %></td>
+                                <td><%= url.visitHistory.length %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

@@ -16,15 +16,20 @@ let originalURL = body.url.trim();
         shortId:shortId,
         redirectURL:originalURL,
         visitHistory:[],
-    })
-    return res.json({id:shortId})
+    });
+
+    const allUrls = await URL.find({});
+
+    return res.render('home', {
+        id: shortId,
+        urls: allUrls,
+    });
 }
 
 // Get click analytics
 async function handleGetAnalytics(req, res) {
   const shortId = req.params.shortId;
   const result = await URL.findOne({ shortId });
-  return res.json=await({totalClicks:result.visitHistory.length,analytics:result.visitHistory})
   if (!result) {
     return res.status(404).json({ error: 'Short URL not found' });
   }

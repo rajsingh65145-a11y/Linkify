@@ -1,9 +1,13 @@
 const express =require('express')
+const path=require('path')
 
 const {connectToMongoDB}=require('./connect')
 const URL=require('./models/url')
 
 const urlRoute=require('./routes/url')
+
+const staticRouter=require('./routes/staticrouter')
+
 const app=express()
 const port=8001
 
@@ -11,9 +15,18 @@ connectToMongoDB('mongodb://127.0.0.1:27017/short-url')
 .then(()=>console.log('mongodb connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+app.set('view engine', 'ejs');
+
+  app.set('views',path.resolve('./Views'))
+
+  
 app.use(express.json())
 
+app.use(express.urlencoded({extended:false}))
+
 app.use("/url",urlRoute)
+
+app.use("/",staticRouter)
 
 app.get('/:shortId',async(req,res)=>{
    const shortId=req.params.shortId;
