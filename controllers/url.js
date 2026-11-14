@@ -16,6 +16,7 @@ let originalURL = body.url.trim();
         shortId:shortId,
         redirectURL:originalURL,
         visitHistory:[],
+        createdBy:req.user._id
     });
 
     const allUrls = await URL.find({});
