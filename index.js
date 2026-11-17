@@ -1,7 +1,7 @@
 const express =require('express')
 const path=require('path')
 const {connectToMongoDB}=require('./connect')
-const {restrictTOLoggedinUserOnly,checkAuth}=require('./middlewares/auth')
+const {checkForAuthentication,restrictTo}=require('./middlewares/auth')
 const cookieParser=require('cookie-parser')
 
 const URL=require('./models/url')
@@ -35,15 +35,16 @@ app.set('view engine', 'ejs');
 app.use(express.json())
 
 app.use(express.urlencoded({extended:false}))
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(checkForAuthentication);
 
 
 
 
 
-app.use("/url",restrictTOLoggedinUserOnly,urlRoute)
+app.use("/url",restrictTo(["NORMAL","ADMIN"]),urlRoute)
 app.use("/user",userRoute)
-app.use("/",checkAuth,staticRouter,)
+app.use("/",staticRouter,)
 
 
 
