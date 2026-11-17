@@ -5,7 +5,7 @@ const secret ="harsh%123"; // sambhal ke rakhna hai jwt me isse hi modification 
 
 function setUser(user){
     
-            return jwt.sign({
+            return jwt.sign({    
                 _id:user._id,
                 email:user.email,
             },secret);
@@ -14,7 +14,7 @@ function setUser(user){
 function getUser(token) {
     if (!token) return null;
     try {
-        return jwt.verify(token, secret);
+        return jwt.verify(token, secret);  // agar  token aur cookie me uid hai to jwt verify karega ki token aur secret me match karega
     } catch (error) {
         return null; // Agar token invalid/tampered hai to null return karega, crash nahi hoga
     }

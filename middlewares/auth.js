@@ -1,31 +1,32 @@
+const { getUser } = require('../service/auth');
 
-const {getUser}=require('../service/auth')
+async function restrictTOLoggedinUserOnly(req, res, next) {
+    const userUid = req.headers['authorization']; // lowercase
 
-async function restrictTOLoggedinUserOnly(req,res,next){
-    const userId=req.cookies?.uid;
-    if(!userId){
-        return res.redirect('/login')
+    if (!userUid) {
+        return res.redirect('/login');
     }
-    const user=getUser(userId);
-    if(!user){
-        return res.redirect('/login')
+    const token = userUid.split('Bearer ')[1];
+    const user = getUser(token);
+
+    if (!user) {
+        return res.redirect('/login');
     }
-    req.user=user;
+    req.user = user;
     next();
 }
 
-async function  checkAuth(req,res,next){
-    const userId=req.cookies?.uid;
+async function checkAuth(req, res, next) {
+    const userUid = req.headers['authorization']; // lowercase
+    const token = userUid?.split('Bearer ')[1];   // token extract kiya safely
 
+    const user = getUser(token);
 
-    const user=getUser(userId);
-    
-    req.user=user;
+    req.user = user;
     next();
 }
 
-
-module.exports={
+module.exports = {
     restrictTOLoggedinUserOnly,
-    checkAuth
-}
+    checkAuth,
+};
